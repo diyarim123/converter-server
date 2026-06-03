@@ -1,0 +1,31 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Track individual conversion jobs
+model ConversionJob {
+  id           String   @id @default(uuid())
+  originalName String   // e.g., "report.pdf"
+  fileSize     Int      // Size in bytes
+  fromFormat   String   // e.g., "pdf"
+  toFormat     String   // e.g., "docx"
+  status       Status   @default(PENDING)
+  resultUrl    String?  // The download link once finished
+  errorMessage String?  // In case the conversion fails
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Enum to strictly control the job status
+enum Status {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
